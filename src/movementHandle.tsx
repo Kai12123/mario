@@ -2,6 +2,8 @@
 // this is because by pressing another key right when ticks change
 // it registers before the previous key    
 // because aDown / dDown is still true, they both run
+
+// this file needs to be reworked entirely, it's impossible to read and is extremely finicky
 export function movementHandle(ticks: any, marioState: any, setMarioState: any, eventTicks: any, setEventTicks: any, eventListeners: any, setEventListeners: any) {
   function handleKeydownBasic(e: any) {
     if (e.key === 'w') { setMarioState((prevState: any) => ({ ...prevState, wDown: true })); }
@@ -51,11 +53,12 @@ export function movementHandle(ticks: any, marioState: any, setMarioState: any, 
   };
 
   function handleKeydownJump(e: any) {
+    
     if (e.key === ' ' && marioState.isJumping == false && eventListeners.keydownJump == false) {
       setMarioState((prevState: any) => ({ ...prevState, spaceDown: true, isJumping: true }));
-      // window.removeEventListener('keydown',handleKeydownJump);
-      setTimeout(() => { setMarioState((prevState: any) => ({ ...prevState, spaceDown: false, isJumping: false })); }, 200);
-      window.removeEventListener('keydown', handleKeydownJump);
+      setTimeout(() => { setMarioState((prevState: any) => ({ ...prevState, spaceDown: false, isJumping: false })); 
+    }, 600);
+    window.removeEventListener('keydown', handleKeydownJump);
       setTimeout(() => {
         setEventListeners((prevState: any) => ({ ...prevState, keydownJump: false }));
       }, 200);
@@ -63,16 +66,16 @@ export function movementHandle(ticks: any, marioState: any, setMarioState: any, 
   }
 
   function handleKeyupJump(e: any) {
-    if (e.key === ' ') setMarioState((prevState: any) => ({ ...prevState, spaceDown: false }));
-  }
-
+  if (e.key === ' ') setMarioState((prevState: any) => ({ ...prevState, spaceDown: false, isJumping: false }));}
   if (marioState.aDown == true) setMarioState((prevState: any) => ({ ...prevState, x: prevState.x - 1 }));
-  // if (marioState.sDown) setMarioState((prevState) => ({ ...prevState, y: prevState.y + 1 }));
   if (marioState.dDown == true) setMarioState((prevState: any) => ({ ...prevState, x: prevState.x + 1 }));
-  if (marioState.spaceDown == true) setMarioState((prevState: any) => ({ ...prevState, y: prevState.y - 50, spaceDown: false, isJumping: true }));
-  if (marioState.spaceDown == false && marioState.y < 500) {
-    setMarioState((prevState: any) => ({ ...prevState, y: prevState.y + 5 }));
-
+  if (marioState.spaceDown == true) setMarioState((prevState: any) => ({ ...prevState, spaceDown: false, isJumping: true }));
+  if (marioState.spaceDown == false && marioState.y < 495 && marioState.isJumping == false) {
+    setMarioState((prevState: any) => ({ ...prevState, y: prevState.y + 2 }));
   }
+  if (marioState.spaceDown == false && marioState.isJumping == true) {
+    setMarioState((prevState: any) => ({ ...prevState, y: prevState.y - 2 }));
+  }
+  // }
 }
 ;
