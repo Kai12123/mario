@@ -9,6 +9,7 @@ import { gameLoop } from './gameLoop';
 
 function App() {
   const [ticks, setTicks] = useState(0);
+  const [jumpTimer, setJumpTimer] = useState({timer: 0, highestValue: 0})
   const [eventTicks, setEventTicks] = useState(0);
   const [eventListeners, setEventListeners] = useState({
     keydownBasic: false,
@@ -19,16 +20,17 @@ function App() {
   const [marioState, setMarioState] = useState({
     sprite:"src/assets/smb1-various_sheet_cuts/image_102.png",
     x: 400,
-    y: 430,
+    y: 495,
     wDown:false,
     aDown:false,
     sDown:false,
     dDown:false,
     spaceDown:false,
     leftFacing: false,
-    isJumping: false
+    touchingGround: false,
+    isRising: false,
   });
-  gameLoop(ticks,setTicks,marioState,setMarioState,eventTicks,setEventTicks, eventListeners,setEventListeners)
+  gameLoop(ticks,setTicks,marioState,setMarioState,eventTicks,setEventTicks, eventListeners,setEventListeners,jumpTimer, setJumpTimer)
   return (
     <>
     <div className='window'>

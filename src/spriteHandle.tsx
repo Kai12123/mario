@@ -12,14 +12,14 @@ export function spriteHandle(ticks: any, marioState: any, setMarioState: any) {
     }
   }
 
-  if (marioState.spaceDown == true && marioState.leftFacing == true && marioState.isJumping == false) {
+  if (marioState.spaceDown == true && marioState.leftFacing == true && marioState.isRising == false) {
     handleJump(marioState.sprite);
 
   }
-  else if (marioState.spaceDown && marioState.leftFacing == false && marioState.isJumping == false) {
+  else if (marioState.spaceDown && marioState.leftFacing == false && marioState.isRising == false) {
     handleJump(marioState.sprite);
   }
-  else if (ticks % 15 == 0 && marioState.leftFacing == false && marioState.isJumping == false) {
+  else if (ticks % 15 == 0 && marioState.leftFacing == false && marioState.isRising == false) {
     // right movement
     if (marioState.sprite == "src/assets/smb1-various_sheet_cuts/image_102.png") {
       setMarioState((prevState: any) => ({ ...prevState, sprite: "src/assets/smb1-various_sheet_cuts/image_101.png" }));
@@ -43,7 +43,7 @@ export function spriteHandle(ticks: any, marioState: any, setMarioState: any) {
 
     }
   }
-  else if (ticks % 15 == 0 && marioState.leftFacing == true && marioState.isJumping == false) {
+  else if (ticks % 15 == 0 && marioState.leftFacing == true && marioState.isRising == false) {
     // left movement
     if (marioState.sprite == "src/assets/smb1-various_sheet_cuts/image_102.png") {
       setMarioState((prevState: any) => ({ ...prevState, sprite: "src/assets/smb1-various_sheet_cuts/image_106.png" }));

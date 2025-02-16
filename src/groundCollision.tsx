@@ -14,10 +14,10 @@ export function groundCollision(marioState:any, setMarioState:any,) {
   // the program will determine if mario's x value is in the chunk's range
 
   fullMapLayout.map((e:any)=>{
-    if (e === 1) {
+    if (e == 1) {
       return <GroundChunk/>
     }
-    if (e === 0) {
+    if (e == 0) {
       return <BlankChunk/>
     }
   })
