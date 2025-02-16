@@ -1,16 +1,18 @@
 import { useState } from 'react';
 import './App.css'
 import { gameLoop } from './gameLoop';
-//todos:
-// replace permanent ground collision with chunk based collision 
-// (use mapArray to determine ground and blank chunks)
-// switch to side scrolling when mario reaches about the middle of the game window
-// add collision with blocks (top, left, right collision)
 
 function App() {
   const [ticks, setTicks] = useState(0);
   const [jumpTimer, setJumpTimer] = useState({timer: 0, highestValue: 0})
   const [eventTicks, setEventTicks] = useState(0);
+  const [keydownArray, setKeydownArray] = useState([]);
+    // When chunk based collision is added, changing map position should change chunk position as well
+  const [mapPosition, setMapPosition] = useState({
+    sideScrolling: false,
+    x: 330,
+    y: 304.5
+  });
   const [eventListeners, setEventListeners] = useState({
     keydownBasic: false,
     keyupBasic: false,
@@ -30,13 +32,13 @@ function App() {
     touchingGround: false,
     isRising: false,
   });
-  gameLoop(ticks,setTicks,marioState,setMarioState,eventTicks,setEventTicks, eventListeners,setEventListeners,jumpTimer, setJumpTimer)
+  gameLoop(ticks,setTicks,marioState,setMarioState,eventTicks,setEventTicks, eventListeners,setEventListeners,jumpTimer, setJumpTimer, mapPosition,setMapPosition,keydownArray, setKeydownArray)
   return (
     <>
     <div className='window'>
     </div>       
     <img src ={marioState.sprite} style={{position: 'absolute',left: `${marioState.x}px`, top:`${marioState.y}px`}}/>
-    <img src="src\assets\smb1-various_sheet_cuts\stage-1-1.png" style={{position: 'absolute', left: '330px', top:'304.5px'}}/>
+    <img src="src\assets\smb1-various_sheet_cuts\stage-1-1.png" style={{position: 'absolute', left: `${mapPosition.x}px`, top:`${mapPosition.y}px`}}/>
     </>
   )
 }

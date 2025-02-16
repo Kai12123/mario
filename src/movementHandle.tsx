@@ -1,5 +1,8 @@
-// this file needs to be reworked entirely, it's impossible to read and is extremely finicky
-export function movementHandle(ticks: any, setTicks:any, marioState: any, setMarioState: any, eventTicks: any, setEventTicks: any, eventListeners: any, setEventListeners: any, jumpTimer: any, setJumpTimer: any,) {
+export function movementHandle(ticks: any, setTicks:any, marioState: any, setMarioState: any, eventTicks: any, setEventTicks: any, eventListeners: any, setEventListeners: any, jumpTimer: any, setJumpTimer: any, mapPosition: any, setMapPosition: any, keydownArray: any, setKeydownArray: any) {
+  // multiple keys cannot be detected
+  // make keydownArray state
+  // event listeners for wasd and space will add their respective key to the array
+  // the marioState.(key)Down properties will be replaced with handleKeyCheck('key', keydownArray) == true
   if (marioState.spaceDown == true)
   {
     setJumpTimer((prevState:any)=>({...prevState, timer: prevState.timer + 1}))
@@ -17,30 +20,45 @@ export function movementHandle(ticks: any, setTicks:any, marioState: any, setMar
     }
   }
   function handleKeydownBasic(e: any) {
-    if (e.key === 'w') { setMarioState((prevState: any) => ({ ...prevState, wDown: true })); }
+    if (e.key === 'w') { 
+      setMarioState((prevState: any) => ({ ...prevState, wDown: true })); 
+    }
     if (e.key === 'a' && marioState.dDown === false) {
-      setMarioState((prevState: any) => ({ ...prevState, aDown: true, leftFacing: true }));
-      window.removeEventListener('keydown', handleKeydownBasic);
-    }
+        setMarioState((prevState: any) => ({ ...prevState, aDown: true, leftFacing: true }));
+      }
+    
     if (e.key === 's') { setMarioState((prevState: any) => ({ ...prevState, sDown: true })); }
+
+
     if (e.key === 'd' && marioState.aDown === false) {
+      console.log(marioState.x)
+      if (marioState.x >= 560){
+      setMarioState((prevState: any) => ({ ...prevState, leftFacing: false }));
+      setMapPosition((prevState: any) => ({ ...prevState, sideScrolling: true }));      
+      }
+      else if (marioState.x < 560){
       setMarioState((prevState: any) => ({ ...prevState, dDown: true, leftFacing: false }));
-      window.removeEventListener('keydown', handleKeydownBasic);
+      setMapPosition((prevState: any) => ({ ...prevState, sideScrolling: false }));
     }
+    }
+    window.removeEventListener('keydown', handleKeydownBasic);
+    setEventListeners((prevState: any)=> ({...prevState, keydownBasic: false}))
   }
 
   function handleKeyupBasic(e: any) {
     if (e.key === 'w') { setMarioState((prevState: any) => ({ ...prevState, wDown: false })); }
     if (e.key === 'a') {
       setMarioState((prevState: any) => ({ ...prevState, aDown: false }));
-      setEventListeners((prevState: any) => ({ ...prevState, keydownBasic: false, keyupBasic: false }));
     }
     if (e.key === 's') { setMarioState((prevState: any) => ({ ...prevState, sDown: false })); }
     if (e.key === 'd') {
       setMarioState((prevState: any) => ({ ...prevState, dDown: false }));
-      setEventListeners((prevState: any) => ({ ...prevState, keydownBasic: false, keyupBasic: false }));
+      setMapPosition((prevState: any) => ({ ...prevState, sideScrolling: false }));
 
     }
+    window.removeEventListener('keyup', handleKeyupBasic);
+    setEventListeners((prevState: any)=> ({...prevState, keyupBasic: false}))
+
   }
   if (eventListeners.keydownBasic == false) {
     window.addEventListener('keydown', handleKeydownBasic);
@@ -78,8 +96,10 @@ export function movementHandle(ticks: any, setTicks:any, marioState: any, setMar
   if (marioState.y < 495){
     setMarioState((prevState: any) => ({ ...prevState, touchingGround: false }));
   }
+
   if (marioState.aDown == true && marioState.dDown == false) setMarioState((prevState: any) => ({ ...prevState, x: prevState.x - 1 }));
-  if (marioState.dDown == true && marioState.aDown == false) setMarioState((prevState: any) => ({ ...prevState, x: prevState.x + 1 }));
+  if (marioState.dDown == true && marioState.aDown == false && mapPosition.sideScrolling == false) setMarioState((prevState: any) => ({ ...prevState, x: prevState.x + 1 }));
+  if (mapPosition.sideScrolling == true && marioState.aDown == false) setMapPosition((prevState: any) => ({ ...prevState, x: prevState.x - 1 }));
  
 
   if (jumpTimer.highestValue >= 5) { 
@@ -115,5 +135,4 @@ export function movementHandle(ticks: any, setTicks:any, marioState: any, setMar
       setMarioState((prevState: any) => ({ ...prevState, isRising: false, y: prevState.y + 2 }));
     }
   }
-  console.log(marioState);
 };
