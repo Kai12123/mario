@@ -12,4 +12,3 @@ export function gameLoop(ticks: any, setTicks: any, marioState: any, setMarioSta
   }, [ticks]);
 
 }
-
