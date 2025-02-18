@@ -23,15 +23,14 @@ export function movementHandle(ticks: any, setTicks:any, marioState: any, setMar
     if (e.key === 'w') { 
       setMarioState((prevState: any) => ({ ...prevState, wDown: true })); 
     }
-    if (e.key === 'a' && marioState.dDown === false) {
+    else if (e.key === 'a' && marioState.dDown === false || marioState.aDown === true && marioState.dDown === false) {
         setMarioState((prevState: any) => ({ ...prevState, aDown: true, leftFacing: true }));
       }
     
-    if (e.key === 's') { setMarioState((prevState: any) => ({ ...prevState, sDown: true })); }
+    else if (e.key === 's') { setMarioState((prevState: any) => ({ ...prevState, sDown: true }));}
 
 
-    if (e.key === 'd' && marioState.aDown === false) {
-      console.log(marioState.x)
+    else if (e.key === 'd' && marioState.aDown === false || marioState.dDown === true && marioState.aDown === false) {
       if (marioState.x >= 560){
       setMarioState((prevState: any) => ({ ...prevState, leftFacing: false }));
       setMapPosition((prevState: any) => ({ ...prevState, sideScrolling: true }));      
@@ -39,25 +38,27 @@ export function movementHandle(ticks: any, setTicks:any, marioState: any, setMar
       else if (marioState.x < 560){
       setMarioState((prevState: any) => ({ ...prevState, dDown: true, leftFacing: false }));
       setMapPosition((prevState: any) => ({ ...prevState, sideScrolling: false }));
-    }
+      }
     }
     window.removeEventListener('keydown', handleKeydownBasic);
-    setEventListeners((prevState: any)=> ({...prevState, keydownBasic: false}))
+    setEventListeners((prevState: any)=> ({...prevState, keydownBasic: false, keyupBasic: false}))
+
   }
 
   function handleKeyupBasic(e: any) {
     if (e.key === 'w') { setMarioState((prevState: any) => ({ ...prevState, wDown: false })); }
-    if (e.key === 'a') {
+    if (e.key === 'a' || marioState.aDown === true) {
       setMarioState((prevState: any) => ({ ...prevState, aDown: false }));
     }
     if (e.key === 's') { setMarioState((prevState: any) => ({ ...prevState, sDown: false })); }
-    if (e.key === 'd') {
+    if (e.key === 'd' || marioState.dDown === true) {
       setMarioState((prevState: any) => ({ ...prevState, dDown: false }));
       setMapPosition((prevState: any) => ({ ...prevState, sideScrolling: false }));
-
+      
     }
     window.removeEventListener('keyup', handleKeyupBasic);
-    setEventListeners((prevState: any)=> ({...prevState, keyupBasic: false}))
+    window.removeEventListener('keydown', handleKeydownBasic);
+    setEventListeners((prevState: any)=> ({...prevState, keydownBasic: false, keyupBasic: false}))
 
   }
   if (eventListeners.keydownBasic == false) {
